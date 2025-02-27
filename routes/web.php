@@ -15,9 +15,7 @@ Route::get('/', function () {
 
     Route::resource('tickets', TicketController::class);
     
-    Route::get('/projects', function () {
-        return view('projects');
-    })->name('projects');
+    Route::resource('projects', TicketController::class);
     
     Route::get('/reports', function () {
         return view('reports');
