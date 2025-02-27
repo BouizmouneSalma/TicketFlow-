@@ -55,7 +55,7 @@ Route::get('/cookies', function () {
     return view('cookies');
 })->name('cookies');
 
-// Route::get('/tickets', [SoftwareController::class, 'index'])->name('tickets.index');
+Route::get('/tickets', [SoftwareController::class, 'index'])->name('tickets.index');
 
 Route::get('/tickets', [SoftwareController::class, 'index' ])->name('tickets.index');
 
