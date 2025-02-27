@@ -13,7 +13,7 @@ Route::get('/', function () {
         return view('dashboard');
     })->name('welcome');
 
-    // Route::resource('tickets', TicketController::class);
+    Route::resource('tickets', TicketController::class);
     
     Route::get('/projects', function () {
         return view('projects');
