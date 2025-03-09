@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Ticket;
+use App\Models\Assignment;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\User;
+
 
 
 class TicketController extends Controller
@@ -64,13 +67,55 @@ class TicketController extends Controller
     foreach ($tickets as $ticket) {
         $ticket->published_at = Carbon::parse($ticket->published_at)->format('F j, Y');  
     }
-        $ticketEncour = Ticket::where('status', 'En cours')->count();
-        $ticketResolu = Ticket::where('status', 'Résolu')->count();
-        $ticketFerme = Ticket::where('status', 'Fermé')->count();
+        $ticketEncour = Ticket::where('status', 'En cours')->where('user_id', Auth::user()->id)->count();
+        $ticketResolu = Ticket::where('status', 'Résolu')->where('user_id', Auth::user()->id)->count();
+        $ticketFerme = Ticket::where('status', 'Fermé')->where('user_id', Auth::user()->id)->count();
         $allTickets = Ticket::count();
+        
+        $ticketsData = compact('tickets', 'ticketEncour', 'ticketResolu', 'allTickets', 'ticketFerme');
 
-    return view('client.support', compact('tickets','ticketEncour','ticketResolu','allTickets','ticketFerme'));
+        return view('client.support', $ticketsData);
+        }
+
+
+
+
+
+        public function showAllTickets(Request $request)
+{
+    $filter = $request->query('filter');
+
+    if ($filter == 'resolved') {
+        $tickets = Ticket::where('status', 'Résolu')->orderBy('created_at', 'desc')->get();
+    } elseif ($filter == 'encours') {
+        $tickets = Ticket::where('status', 'En cours')->orderBy('created_at', 'desc')->get();
+    } elseif ($filter == 'ferme') {
+        $tickets = Ticket::where('status', 'Fermé')->orderBy('created_at', 'desc')->get();
+    } else {
+        $tickets = Ticket::orderBy('created_at', 'desc')->get();
+    }
+
+    foreach ($tickets as $ticket) {
+        $ticket->published_at = Carbon::parse($ticket->published_at)->format('F j, Y');  
+    }
+
+    $ticketEncour = Ticket::where('status', 'En cours')->count();
+    $ticketResolu = Ticket::where('status', 'Résolu')->count();
+    $ticketFerme = Ticket::where('status', 'Fermé')->count();
+    $allTickets = Ticket::count();
+
+
+    $developers = User::where('type', 'developper')->withCount('assignments')->get();
+    $unassignedTickets = Ticket::whereDoesntHave('assignments')->count();
+
+    $ticketsData = compact('tickets', 'ticketEncour', 'ticketResolu', 'allTickets', 'ticketFerme','developers','unassignedTickets');
+
+
+
+        
+    return view('admin.admin', $ticketsData);
 }
+
 
 
     
