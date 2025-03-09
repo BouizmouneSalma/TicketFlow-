@@ -4,6 +4,33 @@
   <!-- Main Content -->
   <div class="container mx-auto px-4 py-6 flex-grow">
     <!-- Welcome Banner -->
+    @if(session('success'))
+    <div class="flex items-center justify-between bg-green-100 border-l-4 border-green-500 text-green-800 p-4 rounded-lg shadow-md mb-4 animate-fadeIn">
+        <div class="flex items-center">
+            <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="text-sm font-medium">{{ session('success') }}</span>
+        </div>
+        <button onclick="this.parentElement.style.display='none'" class="text-green-600 hover:text-green-800 focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+@endif
+
+
     <div class="bg-white rounded-lg shadow-md p-6 mb-6 border-l-4 border-blue-500">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div>
@@ -22,7 +49,7 @@
         <div class="flex justify-between items-center">
           <div>
             <p class="text-gray-500">Tickets totaux</p>
-            <h3 class="text-2xl font-bold">8</h3>
+            <h3 class="text-2xl font-bold">{{$allTickets}}</h3>
           </div>
           <div class="bg-blue-100 p-3 rounded-full">
             <i class="fas fa-ticket-alt text-blue-600 text-xl"></i>
@@ -33,7 +60,7 @@
         <div class="flex justify-between items-center">
           <div>
             <p class="text-gray-500">En cours</p>
-            <h3 class="text-2xl font-bold">3</h3>
+            <h3 class="text-2xl font-bold">{{$ticketEncour}}</h3>
           </div>
           <div class="bg-yellow-100 p-3 rounded-full">
             <i class="fas fa-spinner text-yellow-600 text-xl"></i>
@@ -44,7 +71,7 @@
         <div class="flex justify-between items-center">
           <div>
             <p class="text-gray-500">Résolus</p>
-            <h3 class="text-2xl font-bold">5</h3>
+            <h3 class="text-2xl font-bold">{{$ticketResolu}}</h3>
           </div>
           <div class="bg-green-100 p-3 rounded-full">
             <i class="fas fa-check-circle text-green-600 text-xl"></i>
@@ -61,15 +88,26 @@
           <div class="px-6 py-4 border-b flex justify-between items-center">
             <h3 class="text-lg font-semibold text-gray-700">Vos tickets</h3>
             <div class="flex space-x-2">
-              <button class="bg-blue-100 text-blue-600 px-3 py-1 rounded text-sm font-medium hover:bg-blue-200 transition">
-                Tous (8)
-              </button>
+                <a href="{{ url('/support') }}">
+                    <button class="bg-blue-100 text-blue-600 px-3 py-1 rounded text-sm font-medium hover:bg-blue-200 transition">
+                        Tous ({{$allTickets}})
+                      </button>
+                </a>
+                <a href="{{ url('/support?filter=encours') }}">
               <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded text-sm font-medium hover:bg-gray-200 transition">
-                Actifs (3)
+                En Cours ({{$ticketEncour}})
               </button>
+              </a>
+              <a href="{{ url('/support?filter=resolved') }}">
               <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded text-sm font-medium hover:bg-gray-200 transition">
-                Résolus (5)
+                Résolus ({{$ticketResolu}})
               </button>
+              </a>
+              <a href="{{ url('/support?filter=ferme') }}">
+                <button class="bg-gray-100 text-gray-600 px-3 py-1 rounded text-sm font-medium hover:bg-gray-200 transition">
+                    Fermé ({{$ticketFerme}})
+                </button>
+                </a>
             </div>
           </div>
           
@@ -108,106 +146,37 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- Active Ticket with Recent Response -->
-                <tr class="border-t hover:bg-blue-50 bg-blue-50">
-                  <td class="px-6 py-4">
-                    <div>
-                      <div class="flex items-center mb-1">
-                        <p class="font-medium">Impossible d'exporter les rapports PDF</p>
-                        <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Nouveau message</span>
-                      </div>
-                      <p class="text-sm text-gray-500">Windows 11 • Export Tool</p>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Haute</span></td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">En cours</span></td>
-                  <td class="px-6 py-4 text-sm text-gray-500">Il y a 1 heure</td>
-                  <td class="px-6 py-4">
-                    <div class="flex space-x-1">
-                      <button class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"><i class="fas fa-eye"></i></button>
-                      <button class="p-1 bg-green-100 text-green-600 rounded hover:bg-green-200"><i class="fas fa-reply"></i></button>
-                    </div>
-                  </td>
-                </tr>
+          
 
                 <!-- Normal Active Ticket -->
-                <tr class="border-t hover:bg-gray-50">
-                  <td class="px-6 py-4">
-                    <div>
-                      <p class="font-medium">Erreur lors de l'importation des données clients</p>
-                      <p class="text-sm text-gray-500">MacOS • CRM</p>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Moyenne</span></td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">En cours</span></td>
-                  <td class="px-6 py-4 text-sm text-gray-500">Hier, 14:30</td>
-                  <td class="px-6 py-4">
-                    <div class="flex space-x-1">
-                      <button class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"><i class="fas fa-eye"></i></button>
-                      <button class="p-1 bg-green-100 text-green-600 rounded hover:bg-green-200"><i class="fas fa-reply"></i></button>
-                    </div>
-                  </td>
-                </tr>
+                @foreach ($tickets as $ticket)
+               
+                <tr class="border-t 
+                            {{ $ticket->status == 'En cours' ? ' hover:bg-gray-50' : '' }}
+                            {{ $ticket->status == 'Résolu' ? ' bg-green-50' : '' }}
+                             {{ $ticket->status == 'Fermé' ? ' bg-blue-50 ' : '' }}">
 
-                <!-- Another Active Ticket -->
-                <tr class="border-t hover:bg-gray-50">
-                  <td class="px-6 py-4">
-                    <div>
-                      <p class="font-medium">La synchronisation des données ne fonctionne pas</p>
-                      <p class="text-sm text-gray-500">Linux • SQL Server</p>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Basse</span></td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">En cours</span></td>
-                  <td class="px-6 py-4 text-sm text-gray-500">20 Feb, 2025</td>
-                  <td class="px-6 py-4">
-                    <div class="flex space-x-1">
-                      <button class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"><i class="fas fa-eye"></i></button>
-                      <button class="p-1 bg-green-100 text-green-600 rounded hover:bg-green-200"><i class="fas fa-reply"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Resolved Ticket -->
-                <tr class="border-t hover:bg-gray-50 text-gray-500">
-                  <td class="px-6 py-4">
-                    <div>
-                      <p class="font-medium">Interface qui ne s'affiche pas correctement</p>
-                      <p class="text-sm">Windows 10 • CRM</p>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Moyenne</span></td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Résolu</span></td>
-                  <td class="px-6 py-4 text-sm">15 Feb, 2025</td>
-                  <td class="px-6 py-4">
-                    <div class="flex space-x-1">
-                      <button class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"><i class="fas fa-eye"></i></button>
-                      <button class="p-1 bg-gray-100 text-gray-500 rounded"><i class="fas fa-thumbs-up"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Resolved Ticket Awaiting Confirmation -->
-                <tr class="border-t hover:bg-gray-50 bg-green-50">
-                  <td class="px-6 py-4">
-                    <div>
-                      <div class="flex items-center mb-1">
-                        <p class="font-medium">Problème de connexion à l'application</p>
-                        <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Résolu - En attente de confirmation</span>
+                    <td class="px-6 py-4">
+                      <div>
+                        <p class="font-medium">{{$ticket->title}}</p>
+                        <p class="text-sm text-gray-500">{{$ticket->system}}</p>
                       </div>
-                      <p class="text-sm text-gray-500">Windows 10 • Login Module</p>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Moyenne</span></td>
-                  <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Résolu</span></td>
-                  <td class="px-6 py-4 text-sm text-gray-500">18 Feb, 2025</td>
-                  <td class="px-6 py-4">
-                    <div class="flex space-x-1">
-                      <button class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"><i class="fas fa-eye"></i></button>
-                      <button class="p-1 bg-green-100 text-green-600 rounded hover:bg-green-200"><i class="fas fa-check"></i></button>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                    <td class="px-6 py-4"><span class="px-2 py-1    
+                        {{ $ticket->priority == 'Haute' ? ' bg-red-100 text-red-800' : '' }}
+                            {{ $ticket->priority == 'Moyenne' ? ' bg-yellow-100 text-yellow-800' : '' }}
+                             {{ $ticket->priority == 'Basse' ? ' bg-green-100 text-green-800' : '' }} rounded-full text-xs">{{$ticket->priority}}</span></td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">{{$ticket->status}}</span></td>
+                    <td class="px-6 py-4 text-sm text-gray-500">{{$ticket->published_at}}</td>
+                    <td class="px-6 py-4">
+                      <div class="flex space-x-1">
+                        <button class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200"><i class="fas fa-eye"></i></button>
+                        <button class="p-1 bg-green-100 text-green-600 rounded hover:bg-green-200"><i class="fas fa-reply"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                @endforeach
+               
               </tbody>
             </table>
           </div>
